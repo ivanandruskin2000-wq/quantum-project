@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Квантовая физика — проект Андрюшкина Ивана</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg:#0a0e27; --bg2:#131a3a; --accent:#6c5ce7; --accent2:#00d2ff; --text:#e8ecff; --muted:#9aa4c7; }
+  html { scroll-behavior: smooth; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0;
+    background-image: radial-gradient(2px 2px at 20% 30%,#fff,transparent), radial-gradient(2px 2px at 60% 70%,#fff,transparent),
+    radial-gradient(1px 1px at 80% 20%,#fff,transparent), radial-gradient(1px 1px at 40% 90%,#fff,transparent),
+    radial-gradient(2px 2px at 90% 50%,#fff,transparent);
+    opacity:.35; z-index:-1; animation:twinkle 6s infinite alternate; }
+  @keyframes twinkle { from{opacity:.2} to{opacity:.5} }
+  header { position:sticky; top:0; background:rgba(10,14,39,.85); backdrop-filter:blur(10px); border-bottom:1px solid rgba(108,92,231,.3); z-index:100; }
+  nav { max-width:1100px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
+  .logo { font-weight:700; font-size:1.2rem; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  nav ul { display:flex; gap:20px; list-style:none; }
+  nav a { color:var(--muted); text-decoration:none; font-size:.95rem; transition:.2s; }
+  nav a:hover { color:var(--accent2); }
+  @media(max-width:700px){ nav ul{display:none} }
+  section { max-width:1100px; margin:0 auto; padding:70px 20px; }
+  h2 { font-size:2rem; margin-bottom:12px; text-align:center; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .subtitle { text-align:center; color:var(--muted); margin-bottom:34px; }
+  .hero { text-align:center; padding:100px 20px 80px; max-width:900px; margin:0 auto; }
+  .hero h1 { font-size:clamp(1.8rem,5vw,3.2rem); line-height:1.2; margin-bottom:20px; background:linear-gradient(90deg,#fff,var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p { color:var(--muted); font-size:1.15rem; max-width:650px; margin:0 auto 30px; }
+  .btn { display:inline-block; padding:14px 34px; background:linear-gradient(90deg,var(--accent),var(--accent2)); color:#fff; text-decoration:none; border-radius:50px; font-weight:600; transition:.3s; border:none; cursor:pointer; box-shadow:0 8px 30px rgba(108,92,231,.4); }
+  .btn:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,210,255,.5); }
+  .atom { font-size:4rem; margin-bottom:20px; animation:spin 8s linear infinite; display:inline-block; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .levels { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:40px; }
+  .level-btn { padding:10px 22px; border-radius:30px; cursor:pointer; background:var(--bg2); color:var(--muted); border:1px solid rgba(108,92,231,.4); font-size:.95rem; transition:.3s; }
+  .level-btn.active, .level-btn:hover { background:linear-gradient(90deg,var(--accent),var(--accent2)); color:#fff; border-color:transparent; }
+  .lessons { display:flex; flex-direction:column; gap:22px; }
+  .lesson { background:var(--bg2); border-radius:16px; padding:30px; border:1px solid rgba(108,92,231,.25); transition:.3s; border-left:4px solid var(--accent); }
+  .lesson:hover { border-color:var(--accent2); box-shadow:0 10px 40px rgba(0,210,255,.12); }
+  .lesson-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; flex-wrap:wrap; }
+  .lesson-num { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; font-weight:700; width:42px; height:42px; min-width:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+  .lesson h3 { color:var(--accent2); font-size:1.25rem; }
+  .lesson p { color:var(--muted); font-size:.97rem; margin-bottom:12px; }
+  .lesson p:last-of-type { margin-bottom:0; }
+  .lesson .highlight { background:rgba(108,92,231,.12); border-left:3px solid var(--accent2); padding:12px 16px; border-radius:8px; margin:14px 0; font-size:.92rem; color:#c8d0f0; }
+  .lesson .formula { text-align:center; font-size:1.15rem; color:var(--accent2); font-family:'Georgia',serif; font-style:italic; padding:10px; margin:12px 0; background:rgba(0,210,255,.06); border-radius:8px; }
+  .scientists { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
+  .sci { background:var(--bg2); border-radius:16px; padding:24px; border:1px solid rgba(108,92,231,.25); transition:.3s; }
+  .sci:hover { border-color:var(--accent2); transform:translateY(-5px); }
+  .sci .emoji { font-size:2.2rem; }
+  .sci h3 { margin:8px 0 4px; color:var(--accent2); }
+  .sci .years { font-size:.8rem; color:var(--muted); margin-bottom:10px; display:block; }
+  .sci p { color:var(--muted); font-size:.9rem; }
+  .sci .contrib { margin-top:10px; padding-top:10px; border-top:1px dashed rgba(154,164,199,.3); font-size:.85rem; color:#b8c0e0; }
+  .facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; }
+  .fact { background:linear-gradient(135deg,rgba(108,92,231,.15),rgba(0,210,255,.08)); padding:24px; border-radius:14px; border-left:4px solid var(--accent2); transition:.3s; }
+  .fact:hover { transform:translateX(5px); }
+  .fact h3 { color:var(--accent2); margin-bottom:8px; font-size:1.05rem; }
+  .fact p { color:var(--muted); font-size:.92rem; }
+  .fact .more { margin-top:10px; font-size:.85rem; color:#b8c0e0; font-style:italic; }
+  .quiz { background:var(--bg2); border-radius:20px; padding:34px; max-width:720px; margin:0 auto; border:1px solid rgba(108,92,231,.3); }
+  .question { margin-bottom:24px; }
+  .question p { font-weight:600; margin-bottom:12px; }
+  .opt { display:block; width:100%; text-align:left; padding:12px 16px; margin-bottom:8px; background:rgba(108,92,231,.1); border:1px solid rgba(108,92,231,.3); border-radius:10px; cursor:pointer; transition:.2s; color:var(--text); font-family:inherit; font-size:.95rem; }
+  .opt:hover { background:rgba(108,92,231,.25); }
+  .opt.correct { background:rgba(46,204,113,.3); border-color:#2ecc71; }
+  .opt.wrong { background:rgba(231,76,60,.3); border-color:#e74c3c; }
+  .quiz-result { text-align:center; font-size:1.2rem; font-weight:700; margin-top:16px; color:var(--accent2); }
+  footer { text-align:center; padding:40px 20px; color:var(--muted); border-top:1px solid rgba(108,92,231,.2); font-size:.9rem; }
+  footer strong { color:var(--accent2); }
+</style>
+</head>
+<body>
+<header>
+  <nav>
+    <div class="logo">⚛ Квант</div>
+    <ul>
+      <li><a href="#about">О курсе</a></li>
+      <li><a href="#concepts">Уроки</a></li>
+      <li><a href="#scientists">Учёные</a></li>
+      <li><a href="#facts">Факты</a></li>
+      <li><a href="#quiz">Тест</a></li>
+    </ul>
+  </nav>
+</header>
+<div class="hero">
+  <div class="atom">⚛️</div>
+  <h1>Краткий курс квантовой физики</h1>
+  <p>Учебный проект для 7–11 классов. Пошаговые уроки, понятные объяснения и тест — от квантов до квантовых компьютеров.</p>
+  <a href="#concepts" class="btn">Начать курс ↓</a>
+</div>
+<section id="about">
+  <h2>О курсе</h2>
+  <p style="text-align:center; max-width:750px; margin:0 auto; color:var(--muted); font-size:1.05rem;">
+    Это краткий курс по квантовой физике для школьников. Материал разбит на уроки и адаптирован под три уровня сложности:
+    7–8, 9 и 10–11 классы. Выбери свой уровень — и уроки подстроятся. Читай по порядку, а в конце проверь себя в тесте.
+  </p>
+</section>
+<section id="concepts">
+  <h2>Уроки курса</h2>
+  <p class="subtitle">Выбери уровень — уроки станут глубже</p>
+  <div class="levels">
+    <button class="level-btn active" data-level="junior">7–8 класс</button>
+    <button class="level-btn" data-level="middle">9 класс</button>
+    <button class="level-btn" data-level="senior">10–11 класс</button>
+  </div>
+  <div class="lessons" id="lessons"></div>
+</section>
+<section id="scientists">
+  <h2>Учёные, изменившие мир</h2>
+  <div class="scientists">
+    <div class="sci"><div class="emoji">🧠</div><h3>Макс Планк</h3><span class="years">1858–1947 · Германия</span><p>В 1900 году предположил, что энергия излучается порциями — квантами.</p><div class="contrib">Формула E = hν. С этого началась квантовая физика.</div></div>
+    <div class="sci"><div class="emoji">💡</div><h3>Альберт Эйнштейн</h3><span class="years">1879–1955 · Германия/США</span><p>В 1905 году объяснил фотоэффект: свет — поток фотонов.</p><div class="contrib">Нобелевская премия 1921 г. за фотоэффект.</div></div>
+    <div class="sci"><div class="emoji">⚛️</div><h3>Нильс Бор</h3><span class="years">1885–1962 · Дания</span><p>В 1913 году создал модель атома с квантовыми орбитами.</p><div class="contrib">Электрон излучает фотон при переходе между орбитами. Нобелевская премия 1922 г.</div></div>
+    <div class="sci"><div class="emoji">🐱</div><h3>Эрвин Шрёдингер</h3><span class="years">1887–1961 · Австрия</span><p>Вывел волновое уравнение квантовой механики.</p><div class="contrib">Придумал эксперимент с котом. Нобелевская премия 1933 г.</div></div>
+    <div class="sci"><div class="emoji">📏</div><h3>Вернер Гейзенберг</h3><span class="years">1901–1976 · Германия</span><p>Сформулировал принцип неопределённости.</p><div class="contrib">Нобелевская премия 1932 г. Создатель матричной механики.</div></div>
+    <div class="sci"><div class="emoji">🌊</div><h3>Луи де Бройль</h3><span class="years">1892–1987 · Франция</span><p>Предположил, что частицы обладают волновыми свойствами.</p><div class="contrib">Подтверждено дифракцией электронов. Нобелевская премия 1929 г.</div></div>
+    <div class="sci"><div class="emoji">🔬</div><h3>Макс Борн</h3><span class="years">1882–1970 · Германия</span><p>Дал вероятностную трактовку волновой функции.</p><div class="contrib">Нобелевская премия 1954 г. Основа статистической трактовки.</div></div>
+    <div class="sci"><div class="emoji">🌌</div><h3>Поль Дирак</h3><span class="years">1902–1984 · Великобритания</span><p>Объединил квантовую механику и теорию относительности.</p><div class="contrib">Предсказал позитрон. Нобелевская премия 1933 г.</div></div>
+  </div>
+</section>
+<section id="facts">
+  <h2>Интересные факты</h2>
+  <div class="facts">
+    <div class="fact"><h3>🐱 Кот Шрёдингера</h3><p>Кот в ящике одновременно «жив и мёртв» — до момента открытия.</p><div class="more">Так показали странность суперпозиции.</div></div>
+    <div class="fact"><h3>🔗 Запутанность</h3><p>Измерение одной частицы мгновенно определяет состояние другой.</p><div class="more">Эйнштейн: «жуткое дальнодействие». Нобелевская премия 2022 г.</div></div>
+    <div class="fact"><h3>🧱 Туннелирование</h3><p>Частица проходит сквозь барьер, на который не хватает энергии.</p><div class="more">На этом работает флеш-память.</div></div>
+    <div class="fact"><h3>📏 Неопределённость</h3><p>Чем точнее знаешь положение, тем меньше знаешь скорость.</p><div class="more">Фундаментальное свойство природы.</div></div>
+    <div class="fact"><h3>💻 Квантовые компьютеры</h3><p>Используют кубиты — суперпозицию 0 и 1 одновременно.</p><div class="more">Огромное ускорение в криптографии.</div></div>
+    <div class="fact"><h3>🌞 Фотоэффект</h3><p>Свет выбивает электроны только при достаточной частоте.</p><div class="more">Доказательство квантовой природы света (1905).</div></div>
+    <div class="fact"><h3>🌈 Дуализм</h3><p>Электрон — и волна, и частица.</p><div class="more">Опыт с двумя щелями: проходит через обе сразу.</div></div>
+    <div class="fact"><h3>❄️ Нулевые колебания</h3><p>Даже при абсолютном нуле частицы не замирают полностью.</p><div class="more">Остаётся минимальная квантовая энергия.</div></div>
+  </div>
+</section>
+<section id="quiz">
+  <h2>Проверь себя</h2>
+  <p class="subtitle">Тест подстраивается под уровень</p>
+  <div class="quiz" id="quizBox"></div>
+</section>
+<footer>
+  <p><strong>Автор проекта:</strong> Андрюшкин Иван</p>
+  <p><strong>Школа:</strong> посёлок Мичуринский</p>
+  <p style="margin-top:10px;">Индивидуальный проект по физике · Квантовая физика для 7–11 классов</p>
+</footer>
+
+<script>
+const data = {
+  junior: {
+    lessons: [
+      { title: "Что такое квантовая физика?", body: [
+        "Квантовая физика — это раздел физики, который изучает поведение очень маленьких частиц: атомов, электронов, фотонов. В обычной жизни мы привыкли к классической физике: мяч летит по дуге, машина тормозит, вода закипает при 100 °C. Но когда мы спускаемся в мир микромира, привычные правила перестают работать.",
+        "В микромире частицы ведут себя странно: они могут быть одновременно в нескольких местах, проходить сквозь стены и мгновенно «чувствовать» друг друга на расстоянии. Всё это — квантовые эффекты. Именно на них работают лазеры, флешки, МРТ и будущие квантовые компьютеры.",
+        "В этом курсе мы шаг за шагом разберём, что такое квант, чем свет отличается от частицы и почему учёные до сих пор спорят о том, как понимать квантовую механику."
+      ], highlight: "Квантовая физика — это физика микромира, где действуют необычные законы, не похожие на привычные." },
+      { title: "Квант — порция энергии", body: [
+        "В 1900 году немецкий физик Макс Планк изучал, как нагретые тела излучают свет. Он заметил, что формулы классической физики не описывают эксперимент. Тогда Планк предположил: энергия излучается не непрерывно, а маленькими порциями — квантами.",
+        "Один квант — это минимальная порция энергии, которую можно передать. Нельзя передать «полкванта» — только целое число квантов.",
+        "Энергия одного кванта зависит от частоты: чем выше частота, тем больше энергия. Это записывают формулой E = hν, где h — постоянная Планка, а ν — частота."
+      ], formula: "E = hν", highlight: "Квант — это неделимая порция энергии. С этого понятия началась вся квантовая физика." },
+      { title: "Фотон — частица света", body: [
+        "Свет — это тоже поток квантов. Эти кванты света называют фотонами. У фотона нет массы, но есть энергия и импульс. Фотон всегда летит со скоростью света — 300 000 км/с.",
+        "Чем больше фотонов в луче, тем ярче свет. А чем выше частота света, тем больше энергия каждого фотона. Поэтому фиолетовый свет несёт больше энергии, чем красный.",
+        "Именно на фотонах работает лазер: он создаёт поток одинаковых фотонов — когерентный свет."
+      ], highlight: "Фотон — это квант света. У него нет массы, но есть энергия, зависящая от частоты." },
+      { title: "Волна или частица?", body: [
+        "Долгое время учёные спорили: свет — это волна или частица? Одни опыты (интерференция, дифракция) показывали, что свет — волна. Другие (фотоэффект) — что частица.",
+        "Ответ оказался удивительным: свет — и то, и другое одновременно. Это называется корпускулярно-волновой дуализм. В одних условиях свет ведёт себя как волна, в других — как поток частиц.",
+        "Позже выяснилось, что так ведут себя не только фотоны, но и электроны, протоны и даже целые молекулы."
+      ], highlight: "Дуализм волна-частица: любой объект микромира проявляет и волновые, и корпускулярные свойства." },
+      { title: "Спектр и цвета", body: [
+        "Белый свет на самом деле состоит из разных цветов. Если пропустить его через призму, получится радуга — спектр. Каждому цвету соответствует своя частота и своя энергия фотонов.",
+        "У красного света частота меньше, у фиолетового — больше. Поэтому фиолетовые фотоны энергичнее красных. Ультрафиолет может повреждать кожу, а инфракрасный свет — просто нагревает.",
+        "Атомы тоже излучают свет, но не любыми цветами, а только определёнными — линейчатый спектр. По этим линиям учёные определяют, из чего состоят звёзды."
+      ], highlight: "Спектр — «радуга» частот. Каждый цвет — своя энергия фотонов." },
+      { title: "Энергия и частота", body: [
+        "Связь энергии и частоты — ключевая в квантовой физике. Формула E = hν означает: чем быстрее колеблется волна, тем больше энергии несёт каждый квант.",
+        "Постоянная Планка h = 6,63 × 10⁻³⁴ Дж·с — очень маленькая. Поэтому квантовые эффекты незаметны в обычной жизни, но важны для электронов и фотонов.",
+        "Понимание этой связи помогло объяснить фотоэффект, работу лазеров и строение атомов."
+      ], formula: "E = hν,  h ≈ 6,63·10⁻³⁴ Дж·с", highlight: "Энергия кванта прямо пропорциональна частоте." }
+    ],
+    quiz: [
+      { q: "Что такое квант?", o: ["Порция энергии", "Вид волны", "Частица атома"], a: 0 },
+      { q: "Свет состоит из…", o: ["Молекул", "Фотонов", "Электронов"], a: 1 },
+      { q: "Как называют свойство «быть и волной, и частицей»?", o: ["Дуализм", "Рефракция", "Атомизм"], a: 0 },
+      { q: "Есть ли у фотона масса?", o: ["Да, большая", "Нет, массы нет", "Только у красных фотонов"], a: 1 },
+      { q: "Чем больше фотонов в луче, тем…", o: ["Тем ярче свет", "Тем он холоднее", "Тем он медленнее"], a: 0 }
+    ]
+  },
+  middle: {
+    lessons: [
+      { title: "От классики к квантам", body: [
+        "К концу XIX века физики считали, что мир почти полностью описан. Но оставались загадки: почему нагретые тела светятся именно так? Почему свет выбивает электроны только при определённой частоте?",
+        "Ответ дала квантовая гипотеза. Оказалось, что энергия в микромире передаётся порциями — квантами.",
+        "Так родилась квантовая механика — наука о движении частиц на атомном уровне."
+      ], highlight: "Квантовая механика возникла потому, что классическая физика не смогла объяснить опыты с атомами." },
+      { title: "Модель атома Бора", body: [
+        "В 1911 году Резерфорд предложил планетарную модель атома. Но по классическим законам электрон должен упасть на ядро за доли секунды.",
+        "В 1913 году Бор предложил: электроны движутся только по разрешённым орбитам, не излучая. При переходе между орбитами атом излучает или поглощает квант.",
+        "Это объяснило линейчатые спектры атомов."
+      ], highlight: "Модель Бора: электроны на разрешённых орбитах, переходы рождают фотоны." },
+      { title: "Волны де Бройля", body: [
+        "В 1924 году Луи де Бройль предположил: если свет ведёт себя как частица, то и частицы должны вести себя как волны.",
+        "Формула: λ = h / (m·v). Для массивных тел волна незаметна, но для электрона сравнима с размером атома.",
+        "Опыты по дифракции электронов подтвердили гипотезу."
+      ], formula: "λ = h / (m·v)", highlight: "Любая частица — это ещё и волна." },
+      { title: "Принцип неопределённости", body: [
+        "В 1927 году Гейзенберг сформулировал: нельзя одновременно точно измерить положение и импульс частицы.",
+        "Чем точнее знаем положение, тем меньше знаем скорость. Это фундаментальное свойство природы.",
+        "Поэтому электрон не падает на ядро — его импульс был бы бесконечно неопределён."
+      ], highlight: "Неопределённость — не ошибка измерения, а закон природы." },
+      { title: "Фотоэффект", body: [
+        "Фотоэффект — выбивание электронов из металла светом. Свет действует только при частоте выше пороговой, независимо от яркости.",
+        "Эйнштейн объяснил это квантами: один фотон передаёт энергию одному электрону.",
+        "За это он получил Нобелевскую премию."
+      ], formula: "E_фотона = hν = A_выхода + E_кинетическая", highlight: "Один фотон — один электрон. Частота важнее яркости." },
+      { title: "Спектры и строение атома", body: [
+        "Атомы излучают и поглощают свет только на определённых частотах — линейчатые спектры.",
+        "По спектрам определяют состав звёзд. Гелий впервые нашли в спектре Солнца.",
+        "Квантовая теория объясняет спектры переходами электронов между уровнями."
+      ], highlight: "Спектральные линии — переходы между квантовыми уровнями." }
+    ],
+    quiz: [
+      { q: "Кто создал модель атома с квантовыми орбитами?", o: ["Планк", "Бор", "Ньютон"], a: 1 },
+      { q: "Принцип неопределённости сформулировал…", o: ["Гейзенберг", "Эйнштейн", "Бор"], a: 0 },
+      { q: "Что излучается при переходе электрона на низшую орбиту?", o: ["Фотон", "Протон", "Нейтрон"], a: 0 },
+      { q: "Сколько квантовых чисел описывают состояние электрона?", o: ["Два", "Три", "Четыре"], a: 2 },
+      { q: "Можно ли одновременно точно знать положение и импульс?", o: ["Да, всегда", "Нет, есть предел", "Только в вакууме"], a: 1 }
+    ]
+  },
+  senior: {
+    lessons: [
+      { title: "Квантовая механика как теория", body: [
+        "Квантовая механика — фундаментальная теория, описывающая поведение материи на атомном и субатомном уровне.",
+        "Её основа — волновая функция, которая содержит всю информацию о системе. Квадрат модуля волновой функции даёт вероятность найти частицу в данной точке.",
+        "Теория прошла тысячи экспериментов и лежит в основе лазеров, полупроводников, ядерной энергетики и квантовых компьютеров."
+      ], highlight: "Волновая функция — центральное понятие квантовой механики. Её квадрат = вероятность." },
+      { title: "Уравнение Шрёдингера", body: [
+        "В 1926 году Шрёдингер вывел уравнение, описывающее, как волновая функция меняется со временем.",
+        "Для стационарных состояний оно превращается в уравнение на собственные значения: решения дают разрешённые уровни энергии.",
+        "Именно это уравнение предсказывает спектры атомов и молекул."
+      ], formula: "iħ ∂ψ/∂t = Ĥψ", highlight: "Уравнение Шрёдингера — аналог второго закона Ньютона для квантовых систем." },
+      { title: "Суперпозиция и измерение", body: [
+        "До измерения система может находиться в суперпозиции нескольких состояний одновременно.",
+        "При измерении волновая функция «схлопывается» в одно из состояний — с вероятностью, заданной квадратом амплитуды.",
+        "Кот Шрёдингера — мысленный эксперимент, показывающий странность суперпозиции на макроуровне."
+      ], highlight: "Измерение меняет состояние системы — ключевая особенность квантовой механики." },
+      { title: "Квантовая запутанность", body: [
+        "Две частицы могут образовать единую систему, состояние которой нельзя описать по отдельности.",
+        "Измерение одной мгновенно определяет состояние другой — на любом расстоянии.",
+        "Это не передача сигнала, а корреляция. На запутанности строятся квантовые компьютеры и криптография."
+      ], highlight: "Запутанность — квантовая корреляция, а не сверхсветовая связь." },
+      { title: "Принцип Паули и строение вещества", body: [
+        "Два фермиона не могут находиться в одном квантовом состоянии.",
+        "Поэтому электроны в атоме занимают разные оболочки — отсюда таблица Менделеева и химические свойства.",
+        "Без принципа Паули вещество «схлопнулось» бы, а мир был бы совсем другим."
+      ], highlight: "Принцип Паули объясняет строение атомов и устойчивость вещества." },
+      { title: "Квантовые технологии", body: [
+        "Кубит — квантовый бит, может быть в суперпозиции 0 и 1. N кубитов представляют 2^N состояний.",
+        "Квантовые компьютеры обещают прорыв в криптографии, моделировании молекул и оптимизации.",
+        "Квантовая криптография обеспечивает абсолютно защищённую связь — любое подслушивание обнаруживается."
+      ], highlight: "Кубиты и запутанность — основа будущих квантовых технологий." }
+    ],
+    quiz: [
+      { q: "Что описывает уравнение Шрёдингера?", o: ["Волновую функцию", "Скорость света", "Температуру"], a: 0 },
+      { q: "Квадрат волновой функции — это…", o: ["Энергия", "Вероятность", "Импульс"], a: 1 },
+      { q: "Запутанность позволяет…", o: ["Передавать сигнал мгновенно", "Мгновенно определять состояние пары", "Нарушать законы физики"], a: 1 },
+      { q: "Что происходит с волновой функцией при измерении?", o: ["Она «схлопывается»", "Она удваивается", "Ничего"], a: 0 },
+      { q: "Квантовый компьютер использует вместо бита…", o: ["Байт", "Кубит", "Пиксель"], a: 1 }
+    ]
+  }
+};
+
+let currentLevel = 'junior';
+
+function renderLessons(level) {
+  const box = document.getElementById('lessons');
+  box.innerHTML = '';
+  data[level].lessons.forEach((l, i) => {
+    const div = document.createElement('div');
+    div.className = 'lesson';
+    let html = '<div class="lesson-head"><div class="lesson-num">' + (i+1) + '</div><h3>' + l.title + '</h3></div>';
+    l.body.forEach(p => { html += '<p>' + p + '</p>'; });
+    if (l.formula) html += '<div class="formula">' + l.formula + '</div>';
+    if (l.highlight) html += '<div class="highlight"><strong>💡 Важно:</strong> ' + l.highlight + '</div>';
+    div.innerHTML = html;
+    box.appendChild(div);
+  });
+}
+
+function renderQuiz(level) {
+  const box = document.getElementById('quizBox');
+  box.innerHTML = '';
+  let score = 0, answered = 0;
+  const questions = data[level].quiz;
+
+  questions.forEach((q, qi) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.innerHTML = '<p>' + (qi + 1) + '. ' + q.q + '</p>';
+    q.o.forEach((opt, oi) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.textContent = opt;
+      btn.onclick = () => {
+        if (qDiv.dataset.done) return;
+        qDiv.dataset.done = "1";
+        answered++;
+        if (oi === q.a) { btn.classList.add('correct'); score++; }
+        else { btn.classList.add('wrong'); qDiv.querySelectorAll('.opt')[q.a].classList.add('correct'); }
+        const result = document.getElementById('quizResult');
+        if (result && answered === questions.length) {
+          result.textContent = 'Правильных ответов: ' + score + ' из ' + questions.length;
+        }
+      };
+      qDiv.appendChild(btn);
+    });
+    box.appendChild(qDiv);
+  });
+
+  const res = document.createElement('div');
+  res.id = 'quizResult';
+  res.className = 'quiz-result';
+  box.appendChild(res);
+}
+
+document.querySelectorAll('.level-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentLevel = btn.dataset.level;
+    renderLessons(currentLevel);
+    renderQuiz(currentLevel);
+  };
+});
+
+renderLessons(currentLevel);
+renderQuiz(currentLevel);
+</script>
+</body>
+</html>
